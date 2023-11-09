@@ -7,11 +7,11 @@ const { googleVerify } = require('../helpers/google-verify');
 const renewToken = async (req, res = response) => {
 
     const uid = req.uid;
-    const tokenJWT = await generarJWT(uid);
+    const token = await generarJWT(uid);
 
     res.json({
         ok: true,
-        tokenJWT
+        token
     });
 }
 
