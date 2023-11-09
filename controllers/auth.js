@@ -1,5 +1,5 @@
 const { response } = require('express');
-const Usuario = require('../models/usuario');
+const User = require('../models/user');
 const bcrypt = require('bcryptjs');
 const { generarJWT } = require('../helpers/jwt');
 const { googleVerify } = require('../helpers/google-verify');
@@ -21,12 +21,12 @@ const googleSignIn = async (req, res = response) => {
 
         const { email, name, picture } = await googleVerify(req.body.token);
 
-        const usuarioDB = await Usuario.findOne({ email });
-        let usuario;
+        const usuarioDB = await User.findOne({ email });
+        let user;
 
         if (!usuarioDB) {
-            usuario = new Usuario({
-                nombre: name,
+            user = new User({
+                name: name,
                 email,
                 password: '@@',
                 img: picture,
@@ -34,22 +34,22 @@ const googleSignIn = async (req, res = response) => {
             });
         } else {
             // Existe en la BBDD
-            usuario = usuarioDB;
-            usuario.google = true;
+            user = usuarioDB;
+            user.google = true;
             /**
              * Si piso la contraseña
-             * El usuario ya no podra
+             * El user ya no podra
              * iniciar sesion de la manera tradicional
              * sino solo por google
              */
-            // usuario.password = '@@';
+            // user.password = '@@';
         }
 
         // save user
-        await usuario.save();
+        await user.save();
 
         // generar JWT
-        const tokenJWT = await generarJWT(usuario.id);
+        const tokenJWT = await generarJWT(user.id);
 
         res.json({
             ok: true,
@@ -71,7 +71,7 @@ const login = async (req, res = response) => {
 
     try {
 
-        const usuarioDB = await Usuario.findOne({ email })
+        const usuarioDB = await User.findOne({ email })
 
         // verificar email
         if (!usuarioDB) {

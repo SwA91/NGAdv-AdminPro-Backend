@@ -1,5 +1,5 @@
 const { response } = require('express');
-const Usuario = require('../models/usuario');
+const User = require('../models/user');
 const bcrypt = require('bcryptjs');
 const { generarJWT } = require('../helpers/jwt');
 
@@ -7,14 +7,14 @@ const getUsuarios = async (req, res = response) => {
 
     const desde = Number(req.query.desde) || 0;
 
-    const [usuarios, total] = await Promise.all([
-        Usuario.find({}, 'nombre email role google img').skip(desde).limit(5),
-        Usuario.count()
+    const [users, total] = await Promise.all([
+        User.find({}, 'name email role google img').skip(desde).limit(5),
+        User.count()
     ]);
 
     res.json({
         ok: true,
-        usuarios,
+        users,
         total
     });
 
@@ -26,7 +26,7 @@ const crearUsuario = async (req, res = response) => {
 
     try {
 
-        const existeEmail = await Usuario.findOne({ email });
+        const existeEmail = await User.findOne({ email });
 
         if (existeEmail) {
             return res.status(400).json({
@@ -35,22 +35,22 @@ const crearUsuario = async (req, res = response) => {
             })
         }
 
-        const usuario = new Usuario(req.body);
+        const user = new User(req.body);
 
         // Encriptar contraseña
         const salt = bcrypt.genSaltSync();
-        usuario.password = bcrypt.hashSync(password, salt);
+        user.password = bcrypt.hashSync(password, salt);
 
 
-        // Guardar usuario
-        await usuario.save();
+        // Guardar user
+        await user.save();
 
         // generar el token - JWT
-        const token = await generarJWT(usuario.id);
+        const token = await generarJWT(user.id);
 
         res.json({
             ok: true,
-            usuario,
+            user,
             token
         });
 
@@ -65,18 +65,18 @@ const crearUsuario = async (req, res = response) => {
 
 const actualizarUsuario = async (req, res = response) => {
 
-    // TODO: validar token y comprobar si es el usuario correcto
+    // TODO: validar token y comprobar si es el user correcto
 
     const uid = req.params.id;
 
     try {
 
-        const usuarioDB = await Usuario.findById(uid);
+        const usuarioDB = await User.findById(uid);
 
         if (!usuarioDB) {
             return res.status(400).json({
                 ok: false,
-                msg: 'No existe un usuario por ese id'
+                msg: 'No existe un user por ese id'
             });
         }
 
@@ -85,21 +85,21 @@ const actualizarUsuario = async (req, res = response) => {
 
         if (usuarioDB.email !== email) {
 
-            const existeEmail = await Usuario.findOne({ email });
+            const existeEmail = await User.findOne({ email });
             if (existeEmail) {
                 return res.status(400).json({
                     ok: false,
-                    msg: 'ya existe un usuario con ese email'
+                    msg: 'ya existe un user con ese email'
                 })
             }
         }
 
         campos.email = email;
-        const usuarioActualizado = await Usuario.findByIdAndUpdate(uid, campos, { new: true });
+        const usuarioActualizado = await User.findByIdAndUpdate(uid, campos, { new: true });
 
         res.json({
             ok: true,
-            usuario: usuarioActualizado
+            user: usuarioActualizado
         });
     } catch (error) {
         console.log(error);
@@ -116,20 +116,20 @@ const borrarUsuario = async (req, res = response) => {
 
     try {
 
-        const usuarioDB = await Usuario.findById(uid);
+        const usuarioDB = await User.findById(uid);
 
         if (!usuarioDB) {
             return res.status(400).json({
                 ok: false,
-                msg: 'No existe un usuario por ese id'
+                msg: 'No existe un user por ese id'
             });
         }
 
-        await Usuario.findByIdAndDelete(uid);
+        await User.findByIdAndDelete(uid);
 
         res.json({
             ok: true,
-            msg: 'usuario eliminado'
+            msg: 'user eliminado'
         });
 
     } catch (error) {

@@ -1,4 +1,4 @@
-const Usuario = require('../models/usuario');
+const User = require('../models/user');
 const Medico = require('../models/medico');
 const Hospital = require('../models/hospital');
 const fs = require('fs')
@@ -46,14 +46,14 @@ const actualizarImagen = async (tipo, id, nombreArchivo) => {
             return true;
             break;
 
-        case 'usuarios':
-            entity = await Usuario.findById(id);
+        case 'users':
+            entity = await User.findById(id);
             if (!entity) {
                 console.log(`No se encontro nada con el id: ${id}`);
                 return false;
             }
 
-            borrarImagen(`./uploads/usuarios/${entity.img}`);
+            borrarImagen(`./uploads/users/${entity.img}`);
 
             entity.img = nombreArchivo;
             await entity.save();

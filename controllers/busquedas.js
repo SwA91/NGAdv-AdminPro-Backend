@@ -1,5 +1,5 @@
 const { response } = require('express');
-const Usuario = require('../models/usuario');
+const User = require('../models/user');
 const Medico = require('../models/medico');
 const Hospital = require('../models/hospital');
 
@@ -12,16 +12,16 @@ const getDocumentosColeccion = async (req, res = response) => {
 
     switch (tabla) {
         case 'medicos':
-            data = await Medico.find({ nombre: reqex })
-                .populate('usuario', 'nombre img')
-                .populate('hospital', 'nombre img');
+            data = await Medico.find({ name: reqex })
+                .populate('user', 'name img')
+                .populate('hospital', 'name img');
             break;
         case 'hospitales':
-            data = await Hospital.find({ nombre: reqex })
-                .populate('usuario', 'nombre img');;
+            data = await Hospital.find({ name: reqex })
+                .populate('user', 'name img');;
             break;
-        case 'usuarios':
-            data = await Usuario.find({ nombre: reqex });
+        case 'users':
+            data = await User.find({ name: reqex });
             break;
         default:
             return res.status(400).json({
@@ -41,15 +41,15 @@ const getTodo = async (req, res = response) => {
     const busqueda = req.params.busqueda;
     const reqex = new RegExp(busqueda, 'i');
 
-    const [usuarios, medicos, hospitales] = await Promise.all([
-        Usuario.find({ nombre: reqex }),
-        Medico.find({ nombre: reqex }),
-        Hospital.find({ nombre: reqex })
+    const [users, medicos, hospitales] = await Promise.all([
+        User.find({ name: reqex }),
+        Medico.find({ name: reqex }),
+        Hospital.find({ name: reqex })
     ]);
 
     res.json({
         ok: true,
-        usuarios,
+        users,
         medicos,
         hospitales
     });
