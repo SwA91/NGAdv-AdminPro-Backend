@@ -10,7 +10,7 @@ const borrarImagen = (path) => {
     }
 }
 
-const actualizarImagen = async (tipo, id, nombreArchivo) => {
+const updateImage = async (tipo, id, nombreArchivo) => {
 
     let entity = null;
 
@@ -68,5 +68,5 @@ const actualizarImagen = async (tipo, id, nombreArchivo) => {
 }
 
 module.exports = {
-    actualizarImagen
+    updateImage
 }

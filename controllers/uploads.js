@@ -1,10 +1,10 @@
 const { response } = require('express');
 const { v4: uuidv4 } = require('uuid');
-const { actualizarImagen } = require('../helpers/actualizar-imagen');
+const { updateImage } = require('../helpers/actualizar-imagen');
 const path = require('path');
 const fs = require('fs');
 
-const retornaImagen = async (req, res = response) => {
+const returnImage = async (req, res = response) => {
     const tipo = req.params.tipo;
     const foto = req.params.foto;
     let pathImg = path.join(__dirname, `../uploads/${tipo}/${foto}`);
@@ -14,20 +14,20 @@ const retornaImagen = async (req, res = response) => {
         pathImg = path.join(__dirname, `../uploads/no-img.jpg`);
     }
 
-    // console.log(`retornaImagen: ${pathImg}`);
+    // console.log(`returnImage: ${pathImg}`);
 
     res.sendFile(pathImg);
 }
 const fileUpload = async (req, res = response) => {
 
-    const tipo = req.params.tipo;
+    const typeTable = req.params.tipo;
     const id = req.params.id;
     const tiposValidos = ['hospitales', 'medicos', 'users'];
 
-    if (!tiposValidos.includes(tipo)) {
+    if (!tiposValidos.includes(typeTable)) {
         return res.status(400).json({
             ok: false,
-            msg: `fileUpload > error: no se reconoce el tipo '${tabla}'`
+            msg: `error: not recognized '${typeTable}'`
         });
     }
 
@@ -35,7 +35,7 @@ const fileUpload = async (req, res = response) => {
     if (!req.files || Object.keys(req.files).length === 0) {
         return res.status(400).json({
             ok: false,
-            msg: `fileUpload > error: no hay ningun archivo'`
+            msg: 'error: there is no file'
         });
     }
 
@@ -49,7 +49,7 @@ const fileUpload = async (req, res = response) => {
     if (!extensionesValidas.includes(extensionArchivo)) {
         return res.status(400).json({
             ok: false,
-            msg: `fileUpload > error: extension no permitida '${extensionArchivo}'`
+            msg: `error: extension not allowed '${extensionArchivo}'`
         });
     }
 
@@ -57,22 +57,22 @@ const fileUpload = async (req, res = response) => {
     const nombreArchivo = `${uuidv4()}.${extensionArchivo}`;
 
     // generate path for save image
-    const path = `./uploads/${tipo}/${nombreArchivo}`;
+    const path = `./uploads/${typeTable}/${nombreArchivo}`;
     // Use the mv() method to place the file somewhere on your server
     file.mv(path, function (err) {
         if (err) {
             return res.status(500).json({
                 ok: false,
-                msg: `fileUpload > error: no se pudo mover la imagen`
+                msg: `error: could not move the image`
             });
         }
 
         // update bbdd
-        actualizarImagen(tipo, id, nombreArchivo);
+        updateImage(typeTable, id, nombreArchivo);
 
         res.json({
             ok: true,
-            msg: 'archivo subido',
+            msg: 'file successfully uploaded',
             nombreArchivo
         });
     });
@@ -80,5 +80,5 @@ const fileUpload = async (req, res = response) => {
 
 module.exports = {
     fileUpload,
-    retornaImagen
+    returnImage
 }
