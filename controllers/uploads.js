@@ -22,7 +22,11 @@ const fileUpload = async (req, res = response) => {
 
     const typeTable = req.params.tipo;
     const id = req.params.id;
-    const tiposValidos = ['hospitales', 'medicos', 'users'];
+    const tiposValidos = [
+        'users',
+        'doctors',
+        'hospitals'
+    ];
 
     if (!tiposValidos.includes(typeTable)) {
         return res.status(400).json({
@@ -40,7 +44,7 @@ const fileUpload = async (req, res = response) => {
     }
 
     // process image
-    const file = req.files.imagen;
+    const file = req.files.image;
     const nombreCortado = file.name.split('.');
     const extensionArchivo = nombreCortado[nombreCortado.length - 1];
 
@@ -54,10 +58,10 @@ const fileUpload = async (req, res = response) => {
     }
 
     // generar el nombre del archivo
-    const nombreArchivo = `${uuidv4()}.${extensionArchivo}`;
+    const nameFile = `${uuidv4()}.${extensionArchivo}`;
 
     // generate path for save image
-    const path = `./uploads/${typeTable}/${nombreArchivo}`;
+    const path = `./uploads/${typeTable}/${nameFile}`;
     // Use the mv() method to place the file somewhere on your server
     file.mv(path, function (err) {
         if (err) {
@@ -68,12 +72,12 @@ const fileUpload = async (req, res = response) => {
         }
 
         // update bbdd
-        updateImage(typeTable, id, nombreArchivo);
+        updateImage(typeTable, id, nameFile);
 
         res.json({
             ok: true,
             msg: 'file successfully uploaded',
-            nombreArchivo
+            nameFile
         });
     });
 }
