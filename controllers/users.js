@@ -2,13 +2,14 @@ const { response } = require('express');
 const User = require('../models/user');
 const bcrypt = require('bcryptjs');
 const { generarJWT } = require('../helpers/jwt');
+const { TypeParamsQS } = require('../enum/shared.enum');
 
-const getUsuarios = async (req, res = response) => {
+const getUsers = async (req, res = response) => {
 
-    const desde = Number(req.query.desde) || 0;
+    const from = Number(req.query[TypeParamsQS.FROM]) || 0;
 
     const [users, total] = await Promise.all([
-        User.find({}, 'name email role google img').skip(desde).limit(5),
+        User.find({}, 'name email role google img').skip(from).limit(5),
         User.count()
     ]);
 
@@ -20,7 +21,7 @@ const getUsuarios = async (req, res = response) => {
 
 }
 
-const crearUsuario = async (req, res = response) => {
+const createUser = async (req, res = response) => {
 
     const { email, password } = req.body;
 
@@ -31,7 +32,7 @@ const crearUsuario = async (req, res = response) => {
         if (existeEmail) {
             return res.status(400).json({
                 ok: false,
-                msg: 'el email ya esta registrado'
+                msg: 'Email already registered'
             })
         }
 
@@ -63,7 +64,7 @@ const crearUsuario = async (req, res = response) => {
     }
 }
 
-const actualizarUsuario = async (req, res = response) => {
+const updateUser = async (req, res = response) => {
 
     // TODO: validar token y comprobar si es el user correcto
 
@@ -142,8 +143,8 @@ const borrarUsuario = async (req, res = response) => {
 }
 
 module.exports = {
-    getUsuarios,
-    crearUsuario,
-    actualizarUsuario,
+    getUsers,
+    createUser,
+    updateUser,
     borrarUsuario
 }

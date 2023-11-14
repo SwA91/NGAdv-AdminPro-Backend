@@ -5,14 +5,14 @@
 
 const { Router } = require('express');
 const { check } = require('express-validator');
-const { validarCampos } = require('../middlewares/validar-campos');
-const { validarJWT } = require('../middlewares/validar-jwt');
+const { validateJWT } = require('../middlewares/validate-jwt');
 const {
     getHospitales,
     crearHospital,
     actualizarHospital,
     borrarrHospital
-} = require('../controllers/hospitales')
+} = require('../controllers/hospitales');
+const { validateFields } = require('../middlewares/validate-fields');
 
 const router = Router();
 
@@ -20,24 +20,24 @@ router.get('/', getHospitales);
 
 router.post('/',
     [
-        validarJWT,
+        validateJWT,
         check('name', 'El name del hospital es necesario').not().isEmpty(),
-        validarCampos
+        validateFields
     ],
     crearHospital
 );
 
 router.put('/:id',
     [
-        validarJWT,
+        validateJWT,
         check('name', 'El name del hospital es necesario').not().isEmpty(),
-        validarCampos
+        validateFields
     ],
     actualizarHospital
 );
 
 router.delete('/:id',
-    validarJWT,
+    validateJWT,
     borrarrHospital
 );
 

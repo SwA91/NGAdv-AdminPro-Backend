@@ -5,14 +5,14 @@
 
 const { Router } = require('express');
 const { check } = require('express-validator');
-const { validarCampos } = require('../middlewares/validar-campos');
-const { validarJWT } = require('../middlewares/validar-jwt');
+const { validateJWT } = require('../middlewares/validate-jwt');
 const {
     getMedicos,
     crearMedico,
     actualizarMedico,
     borrarrMedico
-} = require('../controllers/medicos')
+} = require('../controllers/medicos');
+const { validateFields } = require('../middlewares/validate-fields');
 
 const router = Router();
 
@@ -20,26 +20,26 @@ router.get('/', getMedicos);
 
 router.post('/',
     [
-        validarJWT,
+        validateJWT,
         check('name', 'El name del medico es necesario').not().isEmpty(),
         check('hospital', 'El hospital ID debe de ser valido').isMongoId(),
-        validarCampos
+        validateFields
     ],
     crearMedico
 );
 
 router.put('/:id',
     [
-        validarJWT,
+        validateJWT,
         check('name', 'El name del medico es necesario').not().isEmpty(),
         check('hospital', 'El hospital ID debe de ser valido').isMongoId(),
-        validarCampos
+        validateFields
     ],
     actualizarMedico
 );
 
 router.delete('/:id',
-    validarJWT,
+    validateJWT,
     borrarrMedico
 );
 

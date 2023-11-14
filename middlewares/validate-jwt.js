@@ -1,15 +1,16 @@
 const { response } = require('express');
 const jwt = require('jsonwebtoken');
+const { TypeHeader } = require('../enum/shared.enum');
 
-const validarJWT = (req, res = response, next) => {
+const validateJWT = (req, res = response, next) => {
 
-    // leer el token
-    const token = req.header('x-token');
+    // read token
+    const token = req.header(TypeHeader.TOKEN);
 
     if (!token) {
         return res.status(401).json({
             ok: false,
-            msg: 'no hay token en la peticion'
+            msg: 'Token required'
         });
     }
 
@@ -24,11 +25,11 @@ const validarJWT = (req, res = response, next) => {
         console.log(error);
         return res.status(401).json({
             ok: false,
-            msg: 'token no valido'
+            msg: 'Token invalid'
         });
     }
 }
 
 module.exports = {
-    validarJWT
+    validateJWT
 }

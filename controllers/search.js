@@ -5,9 +5,9 @@ const Hospital = require('../models/hospital');
 
 const getDocumentosColeccion = async (req, res = response) => {
 
-    const busqueda = req.params.busqueda;
+    const search = req.params[TypeParamsQS.SEARCH];
     const tabla = req.params.tabla;
-    const reqex = new RegExp(busqueda, 'i');
+    const reqex = new RegExp(search, 'i');
     let data = [];
 
     switch (tabla) {
@@ -26,7 +26,7 @@ const getDocumentosColeccion = async (req, res = response) => {
         default:
             return res.status(400).json({
                 ok: false,
-                msg: `getDocumentosColeccion > error: no se reconoce la tabla '${tabla}'`
+                msg: `error: no se reconoce la tabla '${tabla}'`
             });
     }
 
@@ -38,8 +38,8 @@ const getDocumentosColeccion = async (req, res = response) => {
 
 const getTodo = async (req, res = response) => {
 
-    const busqueda = req.params.busqueda;
-    const reqex = new RegExp(busqueda, 'i');
+    const search = req.params[TypeParamsQS.SEARCH];
+    const reqex = new RegExp(search, 'i');
 
     const [users, medicos, hospitales] = await Promise.all([
         User.find({ name: reqex }),

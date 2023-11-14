@@ -63,7 +63,7 @@ const googleSignIn = async (req, res = response) => {
         console.log(error);
         return res.status(404).json({
             ok: false,
-            msg: 'googleSignIn > error: cannot validate token google'
+            msg: 'error: cannot validate token google'
         })
     }
 }
