@@ -27,9 +27,9 @@ const createUser = async (req, res = response) => {
 
     try {
 
-        const existeEmail = await User.findOne({ email });
+        const existEmail = await User.findOne({ email });
 
-        if (existeEmail) {
+        if (existEmail) {
             return res.status(400).json({
                 ok: false,
                 msg: 'Email already registered'
@@ -59,7 +59,7 @@ const createUser = async (req, res = response) => {
         console.log(error);
         res.status(500).json({
             ok: false,
-            msg: 'error inesperado, revisar logs'
+            msg: 'Unexpected error, contact your administrator'
         });
     }
 }
