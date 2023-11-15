@@ -66,47 +66,54 @@ const createUser = async (req, res = response) => {
 
 const updateUser = async (req, res = response) => {
 
-    // TODO: validar token y comprobar si es el user correcto
-
-    const uid = req.params.id;
+    const uid = req.params[TypeParamsQS.ID];
 
     try {
 
-        const usuarioDB = await User.findById(uid);
+        const userDB = await User.findById(uid);
 
-        if (!usuarioDB) {
+        if (!userDB) {
             return res.status(400).json({
                 ok: false,
-                msg: 'No existe un user por ese id'
+                msg: 'There is now user for this ID'
             });
         }
 
         // actualizaciones
-        const { password, google, email, ...campos } = req.body;
+        const { password, google, email, ...fields } = req.body;
 
-        if (usuarioDB.email !== email) {
+        if (userDB.email !== email) {
 
-            const existeEmail = await User.findOne({ email });
-            if (existeEmail) {
+            const existEmail = await User.findOne({ email });
+            if (existEmail) {
                 return res.status(400).json({
                     ok: false,
-                    msg: 'ya existe un user con ese email'
+                    msg: 'There is already a user with this Email'
                 })
             }
         }
 
-        campos.email = email;
-        const usuarioActualizado = await User.findByIdAndUpdate(uid, campos, { new: true });
+        // only user not google can update their email
+        if (!userDB.google) {
+            fields.email = email;
+        } else if (userDB.email !== email) {
+            return res.status(400).json({
+                ok: false,
+                msg: 'Google users cannot change their email address'
+            })
+        }
+
+        const userUpdated = await User.findByIdAndUpdate(uid, fields, { new: true });
 
         res.json({
             ok: true,
-            user: usuarioActualizado
+            user: userUpdated
         });
     } catch (error) {
         console.log(error);
         res.status(500).json({
             ok: false,
-            msg: 'error inesperado, revisar logs'
+            msg: 'Unexpected error, contact your administrator'
         });
     }
 }
@@ -137,7 +144,7 @@ const borrarUsuario = async (req, res = response) => {
         console.log(error);
         res.status(500).json({
             ok: false,
-            msg: 'error inesperado, revisar logs'
+            msg: 'Unexpected error, contact your administrator'
         });
     }
 }

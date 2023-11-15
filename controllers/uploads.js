@@ -25,7 +25,7 @@ const fileUpload = async (req, res = response) => {
     if (!Object.values(TypeTable).includes(typeTable)) {
         return res.status(400).json({
             ok: false,
-            msg: `error: not recognized '${typeTable}'`
+            msg: `Not recognized '${typeTable}'`
         });
     }
 
@@ -33,7 +33,7 @@ const fileUpload = async (req, res = response) => {
     if (!req.files || Object.keys(req.files).length === 0) {
         return res.status(400).json({
             ok: false,
-            msg: 'error: there is no file'
+            msg: 'There is no file'
         });
     }
 
@@ -46,7 +46,7 @@ const fileUpload = async (req, res = response) => {
     if (!Object.values(TypeImageAllowed).includes(fileExtension)) {
         return res.status(400).json({
             ok: false,
-            msg: `error: extension not allowed '${fileExtension}'`
+            msg: `Extension not allowed '${fileExtension}'`
         });
     }
 
@@ -60,7 +60,7 @@ const fileUpload = async (req, res = response) => {
         if (err) {
             return res.status(500).json({
                 ok: false,
-                msg: `error: could not move the image`
+                msg: `Could not move the image`
             });
         }
 

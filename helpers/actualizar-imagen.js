@@ -3,7 +3,7 @@ const Medico = require('../models/medico');
 const Hospital = require('../models/hospital');
 const fs = require('fs')
 
-const borrarImagen = (path) => {
+const removeImage = (path) => {
     if (fs.existsSync(path)) {
         // delete old image
         fs.unlinkSync(path);
@@ -22,7 +22,7 @@ const updateImage = async (tipo, id, nombreArchivo) => {
                 return false;
             }
 
-            borrarImagen(`./uploads/medicos/${entity.img}`);
+            removeImage(`./uploads/medicos/${entity.img}`);
 
             entity.img = nombreArchivo;
             await entity.save();
@@ -38,7 +38,7 @@ const updateImage = async (tipo, id, nombreArchivo) => {
                 return false;
             }
 
-            borrarImagen(`./uploads/hospitales/${entity.img}`);
+            removeImage(`./uploads/hospitales/${entity.img}`);
 
             entity.img = nombreArchivo;
             await entity.save();
@@ -53,7 +53,7 @@ const updateImage = async (tipo, id, nombreArchivo) => {
                 return false;
             }
 
-            borrarImagen(`./uploads/users/${entity.img}`);
+            removeImage(`./uploads/users/${entity.img}`);
 
             entity.img = nombreArchivo;
             await entity.save();
