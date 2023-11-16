@@ -2,10 +2,11 @@
  * Ruta: /api/users
  */
 const { Router } = require('express');
-const { getUsers, createUser, updateUser, borrarUsuario } = require('../controllers/users');
+const { getUsers, createUser, updateUser, deleteUser } = require('../controllers/users');
 const { check } = require('express-validator');
 const { validateJWT } = require('../middlewares/validate-jwt');
 const { validateFields } = require('../middlewares/validate-fields');
+const { TypeParamsQS } = require('../enum/shared.enum');
 
 const router = Router();
 
@@ -21,7 +22,7 @@ router.post('/',
     createUser
 );
 
-router.put('/:id',
+router.put(`/:${TypeParamsQS.ID}`,
     [
         validateJWT,
         check('name', 'El name es obligatorio').not().isEmpty(),
@@ -32,9 +33,9 @@ router.put('/:id',
     updateUser
 );
 
-router.delete('/:id',
+router.delete(`/:${TypeParamsQS.ID}`,
     validateJWT,
-    borrarUsuario
+    deleteUser
 );
 
 module.exports = router;

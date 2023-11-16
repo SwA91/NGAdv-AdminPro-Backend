@@ -118,9 +118,9 @@ const updateUser = async (req, res = response) => {
     }
 }
 
-const borrarUsuario = async (req, res = response) => {
+const deleteUser = async (req, res = response) => {
 
-    const uid = req.params.id;
+    const uid = req.params[TypeParamsQS.ID];
 
     try {
 
@@ -129,7 +129,7 @@ const borrarUsuario = async (req, res = response) => {
         if (!usuarioDB) {
             return res.status(400).json({
                 ok: false,
-                msg: 'No existe un user por ese id'
+                msg: 'No user exists this ID'
             });
         }
 
@@ -137,7 +137,7 @@ const borrarUsuario = async (req, res = response) => {
 
         res.json({
             ok: true,
-            msg: 'user eliminado'
+            msg: 'User has been eliminated'
         });
 
     } catch (error) {
@@ -153,5 +153,5 @@ module.exports = {
     getUsers,
     createUser,
     updateUser,
-    borrarUsuario
+    deleteUser
 }
