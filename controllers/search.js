@@ -2,37 +2,38 @@ const { response } = require('express');
 const User = require('../models/user');
 const Medico = require('../models/medico');
 const Hospital = require('../models/hospital');
+const { TypeParamsQS, TypeTable } = require('../enum/shared.enum');
 
-const getDocumentosColeccion = async (req, res = response) => {
+const getColecction = async (req, res = response) => {
 
     const search = req.params[TypeParamsQS.SEARCH];
-    const tabla = req.params.tabla;
+    const table = req.params[TypeParamsQS.TABLE];
     const reqex = new RegExp(search, 'i');
-    let data = [];
+    let result = [];
 
-    switch (tabla) {
+    switch (table) {
         case 'medicos':
-            data = await Medico.find({ name: reqex })
+            result = await Medico.find({ name: reqex })
                 .populate('user', 'name img')
                 .populate('hospital', 'name img');
             break;
         case 'hospitales':
-            data = await Hospital.find({ name: reqex })
+            result = await Hospital.find({ name: reqex })
                 .populate('user', 'name img');;
             break;
-        case 'users':
-            data = await User.find({ name: reqex });
+        case TypeTable.USERS:
+            result = await User.find({ name: reqex });
             break;
         default:
             return res.status(400).json({
                 ok: false,
-                msg: `error: no se reconoce la tabla '${tabla}'`
+                msg: `'${table}' table not recognized`
             });
     }
 
     res.json({
         ok: true,
-        resultados: data
+        result
     });
 }
 
@@ -57,5 +58,5 @@ const getTodo = async (req, res = response) => {
 
 module.exports = {
     getTodo,
-    getDocumentosColeccion
+    getColecction
 }

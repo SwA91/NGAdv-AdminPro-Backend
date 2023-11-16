@@ -3,12 +3,12 @@
  */
 const { Router } = require('express');
 const { validateJWT } = require('../middlewares/validate-jwt');
-const { getTodo, getDocumentosColeccion } = require('../controllers/search');
+const { getTodo, getColecction } = require('../controllers/search');
 const { TypeParamsQS, TypeAPI } = require('../enum/shared.enum');
 const router = Router();
 
 router.get(`/:${TypeParamsQS.SEARCH}`, validateJWT, getTodo);
 
-router.get(`/${TypeAPI.COLLECTION}/:${TypeParamsQS.SEARCH}/:${TypeParamsQS.SEARCH}`, validateJWT, getDocumentosColeccion);
+router.get(`/${TypeAPI.COLLECTION}/:${TypeParamsQS.TABLE}/:${TypeParamsQS.SEARCH}`, validateJWT, getColecction);
 
 module.exports = router;
