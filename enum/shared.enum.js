@@ -39,6 +39,7 @@ const TypeParamsQS = Object.freeze({
     ID: 'id',
     PHOTO: 'photo',
     FROM: 'from',
+    UID: 'uid',
 });
 
 /**

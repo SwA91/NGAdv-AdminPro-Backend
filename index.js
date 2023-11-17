@@ -21,7 +21,7 @@ dbConnection()
 
 // Rutas
 app.use(`/${TypeAPI.API}/${TypeAPI.USERS}`, require('./routes/users'));
-app.use(`/${TypeAPI.API}/${TypeAPI.HOSPITALS}`, require('./routes/hospitales'));
+app.use(`/${TypeAPI.API}/${TypeAPI.HOSPITALS}`, require('./routes/hospitals'));
 app.use(`/${TypeAPI.API}/${TypeAPI.DOCTORS}`, require('./routes/medicos'));
 app.use(`/${TypeAPI.API}/${TypeAPI.ALL}`, require('./routes/search'));
 app.use(`/${TypeAPI.API}/${TypeAPI.UPLOADS}`, require('./routes/uploads'));

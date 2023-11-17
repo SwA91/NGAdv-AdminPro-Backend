@@ -1,40 +1,44 @@
 const { response } = require('express');
 const Hospital = require('../models/hospital');
+const { TypeParamsQS } = require('../enum/shared.enum');
 
-const getHospitales = async (req, res = response) => {
+const getHospitals = async (req, res = response) => {
 
-    const hospitales = await Hospital.find()
-        .populate('user', 'name img');
+    const [hospitals, total] = await Promise.all([
+        Hospital.find().populate('user', 'name img'),
+        Hospital.count()
+    ]);
 
     res.json({
         ok: true,
-        hospitales
+        hospitals,
+        total
     });
 }
 
-const crearHospital = async (req, res = response) => {
+const createHospital = async (req, res = response) => {
 
-    const uid = req.uid;
-    const hospital = new Hospital({ user: uid, ...req.body });
+    const uid = req[TypeParamsQS.UID];
+    const newHospital = new Hospital({ user: uid, ...req.body });
 
     try {
 
-        const hospitalDB = await hospital.save();
+        const hospital = await newHospital.save();
 
         res.json({
             ok: true,
-            hospital: hospitalDB
+            hospital
         });
     } catch (error) {
         console.log(error);
         res.status(500).json({
             ok: false,
-            msg: 'crearHospital > error: hable con el administrador'
+            msg: 'Unexpected error, contact your administrator'
         });
     }
 }
 
-const actualizarHospital = async (req, res = response) => {
+const updateHospital = async (req, res = response) => {
 
     const idHospital = req.params.id;
     const idUsuario = req.uid;
@@ -69,12 +73,12 @@ const actualizarHospital = async (req, res = response) => {
         console.log(error);
         res.status(500).json({
             ok: false,
-            msg: 'actualizarHospital > error: hable con el administrador'
+            msg: 'updateHospital > error: hable con el administrador'
         });
     }
 }
 
-const borrarrHospital = async (req, res = response) => {
+const deleteHospital = async (req, res = response) => {
 
     const idHospital = req.params.id;
 
@@ -99,14 +103,14 @@ const borrarrHospital = async (req, res = response) => {
         console.log(error);
         res.status(500).json({
             ok: false,
-            msg: 'borrarrHospital > error: hable con el administrador'
+            msg: 'deleteHospital > error: hable con el administrador'
         });
     }
 }
 
 module.exports = {
-    getHospitales,
-    crearHospital,
-    actualizarHospital,
-    borrarrHospital
+    getHospitals,
+    createHospital,
+    updateHospital,
+    deleteHospital
 }

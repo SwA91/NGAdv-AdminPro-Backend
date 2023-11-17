@@ -16,7 +16,8 @@ const HospitalSchema = Schema(
         }
     },
     {
-        collection: 'hospitales'
+        // personalized name
+        collection: 'hospitals'
     }
 );
 
