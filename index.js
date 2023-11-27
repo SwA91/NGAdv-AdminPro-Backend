@@ -22,12 +22,12 @@ dbConnection()
 // Rutas
 app.use(`/${TypeAPI.API}/${TypeAPI.USERS}`, require('./routes/users'));
 app.use(`/${TypeAPI.API}/${TypeAPI.HOSPITALS}`, require('./routes/hospitals'));
-app.use(`/${TypeAPI.API}/${TypeAPI.DOCTORS}`, require('./routes/medicos'));
+app.use(`/${TypeAPI.API}/${TypeAPI.DOCTORS}`, require('./routes/doctors'));
 app.use(`/${TypeAPI.API}/${TypeAPI.ALL}`, require('./routes/search'));
 app.use(`/${TypeAPI.API}/${TypeAPI.UPLOADS}`, require('./routes/uploads'));
 app.use(`/${TypeAPI.API}/${TypeAPI.LOGIN}`, require('./routes/auth'));
 
 app.listen(process.env.PORT, () => {
-    console.log('Servidor corriendo en puerto: ' + process.env.PORT);
+    console.log('Server running in the port: ' + process.env.PORT);
 });
 

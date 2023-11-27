@@ -1,44 +1,42 @@
 /**
- * Hospitals
- * Path: /api/hospitals
+ * Hospitales
+ * Path: /api/doctors
  */
+
 const { Router } = require('express');
 const { check } = require('express-validator');
 const { validateJWT } = require('../middlewares/validate-jwt');
-const {
-    getHospitals,
-    createHospital,
-    updateHospital,
-    deleteHospital
-} = require('../controllers/hospitals');
+const { getDoctors, createDoctor, updateDoctor, deleteDoctor } = require('../controllers/doctors');
 const { validateFields } = require('../middlewares/validate-fields');
 const { TypeParamsQS } = require('../enum/shared.enum');
 
 const router = Router();
 
-router.get('/', getHospitals);
+router.get('/', getDoctors);
 
 router.post('/',
     [
         validateJWT,
         check('name', 'The name is required').not().isEmpty(),
+        check('hospital', 'The hospital ID must be valid').isMongoId(),
         validateFields
     ],
-    createHospital
+    createDoctor
 );
 
 router.put(`/:${TypeParamsQS.ID}`,
     [
         validateJWT,
-        check('name', 'The name of the hospital is required').not().isEmpty(),
+        check('name', 'The name is required').not().isEmpty(),
+        check('hospital', 'The hospital ID must be valid').isMongoId(),
         validateFields
     ],
-    updateHospital
+    updateDoctor
 );
 
 router.delete(`/:${TypeParamsQS.ID}`,
     validateJWT,
-    deleteHospital
+    deleteDoctor
 );
 
 module.exports = router;

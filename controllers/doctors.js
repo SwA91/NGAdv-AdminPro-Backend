@@ -1,11 +1,12 @@
 const { response } = require('express');
-const Hospital = require('../models/hospital');
+const Doctor = require('../models/doctor');
 const { TypeParamsQS } = require('../enum/shared.enum');
 
-const getHospitals = async (req, res = response) => {
+const getDoctors = async (req, res = response) => {
 
-    // I return only fields needed
-    const result = await Hospital.find().populate('user', 'name img');
+    const result = await Doctor.find()
+        .populate('user', 'name img')
+        .populate('hospital', 'name img');
 
     res.json({
         ok: true,
@@ -13,18 +14,21 @@ const getHospitals = async (req, res = response) => {
     });
 }
 
-const createHospital = async (req, res = response) => {
+const createDoctor = async (req, res = response) => {
 
     const uid = req[TypeParamsQS.UID];
-    const newHospital = new Hospital({ user: uid, ...req.body });
+    const newDoctor = new Doctor({
+        user: uid,
+        ...req.body
+    });
 
     try {
 
-        const hospital = await newHospital.save();
+        const doctor = await newDoctor.save();
 
         res.json({
             ok: true,
-            hospital
+            doctor
         });
     } catch (error) {
         console.log(error);
@@ -35,36 +39,36 @@ const createHospital = async (req, res = response) => {
     }
 }
 
-const updateHospital = async (req, res = response) => {
+const updateDoctor = async (req, res = response) => {
 
-    const idHospital = req.params[TypeParamsQS.ID];
+    const idDoctor = req.params[TypeParamsQS.ID];
     const idUsuario = req[TypeParamsQS.UID];
 
     try {
 
-        const hospitalDB = await Hospital.findById(idHospital);
+        const doctorDB = await Doctor.findById(idDoctor);
 
-        if (!hospitalDB) {
+        if (!doctorDB) {
             res.status(404).json({
                 ok: false,
-                msg: 'Hospital not found'
+                msg: 'Doctor not found'
             });
         }
 
-        const changesHospital = {
+        const changesDoctor = {
             ...req.body,
             user: idUsuario
         }
 
-        const hospital = await Hospital.findByIdAndUpdate(
-            idHospital,
-            changesHospital,
+        const doctor = await Doctor.findByIdAndUpdate(
+            idDoctor,
+            changesDoctor,
             { new: true }
         );
 
         res.json({
             ok: true,
-            hospital
+            doctor
         });
     } catch (error) {
         console.log(error);
@@ -73,28 +77,29 @@ const updateHospital = async (req, res = response) => {
             msg: 'Unexpected error, contact your administrator'
         });
     }
+
 }
 
-const deleteHospital = async (req, res = response) => {
+const deleteDoctor = async (req, res = response) => {
 
-    const idHospital = req.params[TypeParamsQS.ID];
+    const idDoctor = req.params[TypeParamsQS.ID];
 
     try {
 
-        const hospitalDB = await Hospital.findById(idHospital);
+        const doctorDB = await Doctor.findById(idDoctor);
 
-        if (!hospitalDB) {
+        if (!doctorDB) {
             res.status(404).json({
                 ok: false,
-                msg: 'Hospital not found'
+                msg: 'Doctor not found'
             });
         }
 
-        await Hospital.findByIdAndDelete(idHospital);
+        await Doctor.findByIdAndDelete(idDoctor);
 
         res.json({
             ok: true,
-            msg: 'Hospital deleted'
+            msg: 'Doctor deleted'
         });
     } catch (error) {
         console.log(error);
@@ -106,8 +111,8 @@ const deleteHospital = async (req, res = response) => {
 }
 
 module.exports = {
-    getHospitals,
-    createHospital,
-    updateHospital,
-    deleteHospital
+    getDoctors,
+    createDoctor,
+    updateDoctor,
+    deleteDoctor
 }

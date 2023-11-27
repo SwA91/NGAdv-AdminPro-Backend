@@ -1,23 +1,23 @@
 const { response } = require('express');
 const User = require('../models/user');
-const Medico = require('../models/medico');
+const Doctor = require('../models/doctor');
 const Hospital = require('../models/hospital');
 const { TypeParamsQS, TypeTable } = require('../enum/shared.enum');
 
 const getColecction = async (req, res = response) => {
 
     const search = req.params[TypeParamsQS.SEARCH];
-    const table = req.params[TypeParamsQS.TABLE];
+    const typeTable = req.params[TypeParamsQS.TABLE];
     const reqex = new RegExp(search, 'i');
     let result = [];
 
-    switch (table) {
-        case 'medicos':
-            result = await Medico.find({ name: reqex })
+    switch (typeTable) {
+        case TypeTable.DOCTORS:
+            result = await Doctor.find({ name: reqex })
                 .populate('user', 'name img')
                 .populate('hospital', 'name img');
             break;
-        case 'hospitales':
+        case TypeTable.HOSPITALS:
             result = await Hospital.find({ name: reqex })
                 .populate('user', 'name img');;
             break;
@@ -27,7 +27,7 @@ const getColecction = async (req, res = response) => {
         default:
             return res.status(400).json({
                 ok: false,
-                msg: `'${table}' table not recognized`
+                msg: `'${typeTable}' table not recognized`
             });
     }
 
@@ -37,14 +37,14 @@ const getColecction = async (req, res = response) => {
     });
 }
 
-const getTodo = async (req, res = response) => {
+const getAll = async (req, res = response) => {
 
     const search = req.params[TypeParamsQS.SEARCH];
     const reqex = new RegExp(search, 'i');
 
     const [users, medicos, hospitales] = await Promise.all([
         User.find({ name: reqex }),
-        Medico.find({ name: reqex }),
+        Doctor.find({ name: reqex }),
         Hospital.find({ name: reqex })
     ]);
 
@@ -57,6 +57,6 @@ const getTodo = async (req, res = response) => {
 }
 
 module.exports = {
-    getTodo,
+    getTodo: getAll,
     getColecction
 }

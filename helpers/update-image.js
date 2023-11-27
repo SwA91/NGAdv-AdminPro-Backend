@@ -1,5 +1,5 @@
 const User = require('../models/user');
-const Medico = require('../models/medico');
+const Medico = require('../models/doctor');
 const Hospital = require('../models/hospital');
 const fs = require('fs');
 const { TypeTable, TypeAPI } = require('../enum/shared.enum');
