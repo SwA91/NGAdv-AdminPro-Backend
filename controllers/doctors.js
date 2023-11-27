@@ -14,6 +14,35 @@ const getDoctors = async (req, res = response) => {
     });
 }
 
+const getDoctorById = async (req, res = response) => {
+
+    try {
+
+        const result = await Doctor.findById(req.params[TypeParamsQS.ID])
+            .populate('user', 'name img')
+            .populate('hospital', 'name img');
+
+        if (!result) {
+            res.status(404).json({
+                ok: false,
+                msg: 'Doctor not found'
+            });
+        }
+
+        res.json({
+            ok: true,
+            result
+        });
+        
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            ok: false,
+            msg: 'Unexpected error, contact your administrator'
+        });
+    }
+}
+
 const createDoctor = async (req, res = response) => {
 
     const uid = req[TypeParamsQS.UID];
@@ -114,5 +143,6 @@ module.exports = {
     getDoctors,
     createDoctor,
     updateDoctor,
-    deleteDoctor
+    deleteDoctor,
+    getDoctorById,
 }

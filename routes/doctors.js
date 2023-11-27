@@ -6,13 +6,18 @@
 const { Router } = require('express');
 const { check } = require('express-validator');
 const { validateJWT } = require('../middlewares/validate-jwt');
-const { getDoctors, createDoctor, updateDoctor, deleteDoctor } = require('../controllers/doctors');
+const { getDoctors, createDoctor, updateDoctor, deleteDoctor, getDoctorById } = require('../controllers/doctors');
 const { validateFields } = require('../middlewares/validate-fields');
 const { TypeParamsQS } = require('../enum/shared.enum');
 
 const router = Router();
 
-router.get('/', getDoctors);
+router.get('/', validateJWT, getDoctors);
+
+router.get(`/:${TypeParamsQS.ID}`,
+    validateJWT,
+    getDoctorById
+);
 
 router.post('/',
     [
