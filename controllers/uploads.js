@@ -1,9 +1,10 @@
 const { response } = require('express');
 const { v4: uuidv4 } = require('uuid');
-const { updateImage } = require('../helpers/actualizar-imagen');
+const { updateImage } = require('../helpers/update-image');
 const path = require('path');
 const fs = require('fs');
 const { TypeTable, TypeAPI, TypeImageAllowed, TypeParamsQS } = require('../enum/shared.enum');
+const { log } = require('console');
 
 const returnImage = async (req, res = response) => {
     const type = req.params[TypeParamsQS.TYPE];
@@ -65,13 +66,19 @@ const fileUpload = async (req, res = response) => {
         }
 
         // update bbdd
-        updateImage(typeTable, id, nameFile);
-
-        res.json({
-            ok: true,
-            msg: 'file successfully uploaded',
-            nameFile
+        updateImage(typeTable, id, nameFile).then(() => {
+            res.json({
+                ok: true,
+                msg: 'file successfully uploaded',
+                nameFile
+            });
+        }).catch(() => {
+            res.status(500).json({
+                ok: false,
+                msg: 'Unexpected error, contact your administrator'
+            });
         });
+
     });
 }
 

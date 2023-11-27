@@ -40,56 +40,56 @@ const createHospital = async (req, res = response) => {
 
 const updateHospital = async (req, res = response) => {
 
-    const idHospital = req.params.id;
-    const idUsuario = req.uid;
+    const idHospital = req.params[TypeParamsQS.ID];
+    const idUsuario = req[TypeParamsQS.UID];
 
     try {
 
-        const hospital = await Hospital.findById(idHospital);
+        const hospitalDB = await Hospital.findById(idHospital);
 
-        if (!hospital) {
+        if (!hospitalDB) {
             res.status(404).json({
                 ok: false,
-                msg: 'Hospital no encontrado'
+                msg: 'Hospital not found'
             });
         }
 
-        const cambiosHospital = {
+        const changesHospital = {
             ...req.body,
             user: idUsuario
         }
 
-        const hospitalActualizado = await Hospital.findByIdAndUpdate(
+        const hospital = await Hospital.findByIdAndUpdate(
             idHospital,
-            cambiosHospital,
+            changesHospital,
             { new: true }
         );
 
         res.json({
             ok: true,
-            hospital: hospitalActualizado
+            hospital
         });
     } catch (error) {
         console.log(error);
         res.status(500).json({
             ok: false,
-            msg: 'updateHospital > error: hable con el administrador'
+            msg: 'Unexpected error, contact your administrator'
         });
     }
 }
 
 const deleteHospital = async (req, res = response) => {
 
-    const idHospital = req.params.id;
+    const idHospital = req.params[TypeParamsQS.ID];
 
     try {
 
-        const hospital = await Hospital.findById(idHospital);
+        const hospitalDB = await Hospital.findById(idHospital);
 
-        if (!hospital) {
+        if (!hospitalDB) {
             res.status(404).json({
                 ok: false,
-                msg: 'Hospital no encontrado'
+                msg: 'Hospital not found'
             });
         }
 
@@ -97,13 +97,13 @@ const deleteHospital = async (req, res = response) => {
 
         res.json({
             ok: true,
-            msg: 'Hospital eliminado'
+            msg: 'Hospital deleted'
         });
     } catch (error) {
         console.log(error);
         res.status(500).json({
             ok: false,
-            msg: 'deleteHospital > error: hable con el administrador'
+            msg: 'Unexpected error, contact your administrator'
         });
     }
 }
