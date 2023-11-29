@@ -14,10 +14,8 @@ const getMenuFrontend = (role = TypeRole.USER_ROLE) => {
             icono: 'mdi mdi-gauge',
             submenu: [
                 { titulo: 'Main', url: '/' },
-                { titulo: 'Gráficas', url: 'grafica1' },
-                { titulo: 'rxjs', url: 'rxjs' },
-                { titulo: 'Promesas', url: 'promesas' },
-                { titulo: 'ProgressBar', url: 'progress' },
+                { titulo: 'Graphics Example', url: 'grafica1' },
+                { titulo: 'ProgressBar Example', url: 'progress' },
             ]
         },
         // 1: MAINTENANCE

@@ -38,20 +38,20 @@ testem.log
 /typings
 
 #images
-uploads/doctors/**.jpg
-uploads/doctors/**.jpeg
-uploads/doctors/**.png
-uploads/doctors/**.gif
+# uploads/doctors/**.jpg
+# uploads/doctors/**.jpeg
+# uploads/doctors/**.png
+# uploads/doctors/**.gif
 
-uploads/hospitals/**.jpg
-uploads/hospitals/**.jpeg
-uploads/hospitals/**.png
-uploads/hospitals/**.gif
+# uploads/hospitals/**.jpg
+# uploads/hospitals/**.jpeg
+# uploads/hospitals/**.png
+# uploads/hospitals/**.gif
 
-uploads/users/**.jpg
-uploads/users/**.jpeg
-uploads/users/**.png
-uploads/users/**.gif
+# uploads/users/**.jpg
+# uploads/users/**.jpeg
+# uploads/users/**.png
+# uploads/users/**.gif
 
 # System files
 .DS_Store
