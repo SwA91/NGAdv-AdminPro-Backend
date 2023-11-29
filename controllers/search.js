@@ -42,7 +42,7 @@ const getAll = async (req, res = response) => {
     const search = req.params[TypeParamsQS.SEARCH];
     const reqex = new RegExp(search, 'i');
 
-    const [users, medicos, hospitales] = await Promise.all([
+    const [users, doctors, hospitals] = await Promise.all([
         User.find({ name: reqex }),
         Doctor.find({ name: reqex }),
         Hospital.find({ name: reqex })
@@ -51,12 +51,12 @@ const getAll = async (req, res = response) => {
     res.json({
         ok: true,
         users,
-        medicos,
-        hospitales
+        doctors,
+        hospitals
     });
 }
 
 module.exports = {
-    getTodo: getAll,
+    getAll,
     getColecction
 }

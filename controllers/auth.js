@@ -3,6 +3,7 @@ const User = require('../models/user');
 const bcrypt = require('bcryptjs');
 const { generarJWT } = require('../helpers/jwt');
 const { googleVerify } = require('../helpers/google-verify');
+const { getMenuFrontend } = require('../helpers/menu-frontend');
 
 const renewToken = async (req, res = response) => {
 
@@ -14,7 +15,8 @@ const renewToken = async (req, res = response) => {
     res.json({
         ok: true,
         token,
-        user
+        user,
+        menu: getMenuFrontend(user.role)
     });
 }
 
@@ -52,12 +54,12 @@ const googleSignIn = async (req, res = response) => {
         await user.save();
 
         // generar JWT
-        const tokenJWT = await generarJWT(user.id);
+        const token = await generarJWT(user.id);
 
         res.json({
             ok: true,
-            email, name, picture,
-            token: tokenJWT
+            token,
+            menu: getMenuFrontend(user.role)
         });
     } catch (error) {
         console.log(error);
@@ -74,32 +76,33 @@ const login = async (req, res = response) => {
 
     try {
 
-        const usuarioDB = await User.findOne({ email })
+        const userDB = await User.findOne({ email })
 
         // verificar email
-        if (!usuarioDB) {
+        if (!userDB) {
             return res.status(404).json({
                 ok: false,
-                msg: 'email o password no valido'
+                msg: 'email or password no valid'
             })
         }
 
         // verificar contraseña
-        const validPassword = bcrypt.compareSync(password, usuarioDB.password);
+        const validPassword = bcrypt.compareSync(password, userDB.password);
 
         if (!validPassword) {
             return res.status(400).json({
                 ok: false,
-                msg: 'email o password no valido'
+                msg: 'email or password no valid'
             })
         }
 
         // generar el token - JWT
-        const token = await generarJWT(usuarioDB.id);
+        const token = await generarJWT(userDB.id);
 
         res.json({
             ok: true,
-            token
+            token,
+            menu: getMenuFrontend(userDB.role)
         });
     } catch (error) {
         console.log(error);

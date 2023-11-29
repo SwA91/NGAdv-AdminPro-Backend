@@ -63,10 +63,21 @@ const TypeImageAllowed = Object.freeze({
     GIF: 'gif'
 });
 
+/**
+ * Enum for type role in the app
+ * @readonly
+ * @enum
+ */
+const TypeRole = Object.freeze({
+    USER_ROLE: 'USER_ROLE',
+    ADMIN_ROLE: 'ADMIN_ROLE'
+});
+
 module.exports = {
     TypeTable,
     TypeAPI,
     TypeImageAllowed,
     TypeParamsQS,
-    TypeHeader
+    TypeHeader,
+    TypeRole,
 }

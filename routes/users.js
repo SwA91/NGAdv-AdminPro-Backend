@@ -4,7 +4,7 @@
 const { Router } = require('express');
 const { getUsers, createUser, updateUser, deleteUser } = require('../controllers/users');
 const { check } = require('express-validator');
-const { validateJWT } = require('../middlewares/validate-jwt');
+const { validateJWT, validateAdminRole, validateAdminRoleOrSameUser } = require('../middlewares/validate-jwt');
 const { validateFields } = require('../middlewares/validate-fields');
 const { TypeParamsQS } = require('../enum/shared.enum');
 
@@ -25,6 +25,7 @@ router.post('/',
 router.put(`/:${TypeParamsQS.ID}`,
     [
         validateJWT,
+        validateAdminRoleOrSameUser,
         check('name', 'El name es obligatorio').not().isEmpty(),
         check('role', 'El role es obligatorio').not().isEmpty(),
         check('email', 'El email es obligatorio').isEmail(),
@@ -34,7 +35,7 @@ router.put(`/:${TypeParamsQS.ID}`,
 );
 
 router.delete(`/:${TypeParamsQS.ID}`,
-    validateJWT,
+    [validateJWT, validateAdminRole],
     deleteUser
 );
 
